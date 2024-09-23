@@ -1,19 +1,23 @@
-import { Duration, Stack, StackProps } from 'aws-cdk-lib';
-import * as sns from 'aws-cdk-lib/aws-sns';
-import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
-import * as sqs from 'aws-cdk-lib/aws-sqs';
+import path = require('path');
+import { Stack, StackProps } from 'aws-cdk-lib';
+import { Code, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
+import { LambdaRestApi } from 'aws-cdk-lib/aws-apigateway';
 
 export class CdkWorkshopStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const queue = new sqs.Queue(this, 'CdkWorkshopQueue', {
-      visibilityTimeout: Duration.seconds(300)
-    });
+    const testLambda = new NodejsFunction(this, "HelloLambdaHandler", {
+      entry: path.join(__dirname, '../lambda/hello.ts'),
+      handler: 'handler',
+      runtime: Runtime.NODEJS_20_X,
+      bundling: { minify: true },
+    })
 
-    const topic = new sns.Topic(this, 'CdkWorkshopTopic');
-
-    topic.addSubscription(new subs.SqsSubscription(queue));
+    const gateway = new LambdaRestApi(this, "Endpoint", {
+      handler: testLambda,
+    })
   }
 }
