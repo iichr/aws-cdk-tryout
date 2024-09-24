@@ -28,8 +28,7 @@ export class HitCounter extends Construct {
                 HITS_TABLE_NAME: hitsTable.tableName,
                 TARGET_FUNCTION_NAME: props.targetFunction.functionName,
             }
-        }
-        )
+        })
 
         // Grant lambda permissions to write data to the table
         hitsTable.grantReadWriteData(this.handler)
@@ -37,6 +36,4 @@ export class HitCounter extends Construct {
         // Grant lambda permissions to invoke the target function
         props.targetFunction.grantInvoke(this.handler)
     }
-
-
 }
