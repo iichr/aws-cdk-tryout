@@ -1,7 +1,7 @@
 import { InvokeCommand, Lambda } from "@aws-sdk/client-lambda";
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 
-export const handler = async (event: any): Promise<object> => {
+export const handler = async (event: { path: string }): Promise<object> => {
   const dynamoDb = new DynamoDB();
   const lambda = new Lambda();
 

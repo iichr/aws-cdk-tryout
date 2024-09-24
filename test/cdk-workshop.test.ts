@@ -1,5 +1,5 @@
 import * as cdk from "aws-cdk-lib";
-import { Template, Match } from "aws-cdk-lib/assertions";
+import { Template } from "aws-cdk-lib/assertions";
 import * as CdkWorkshop from "../lib/cdk-workshop-stack";
 
 test("Lambdas and API GW created successfully", () => {

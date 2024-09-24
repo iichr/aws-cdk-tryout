@@ -1,9 +1,8 @@
 import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
 import { IFunction, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-import { table } from "console";
 import { Construct } from "constructs";
-import path = require("path");
+import * as path from "path";
 
 export interface HitCounterProps {
   targetFunction: IFunction;
