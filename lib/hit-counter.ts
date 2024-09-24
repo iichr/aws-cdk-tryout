@@ -6,34 +6,34 @@ import { Construct } from "constructs";
 import path = require("path");
 
 export interface HitCounterProps {
-    targetFunction: IFunction;
+  targetFunction: IFunction;
 }
 
 export class HitCounter extends Construct {
-    public readonly handler: NodejsFunction
+  public readonly handler: NodejsFunction;
 
-    constructor(scope: Construct, id: string, props: HitCounterProps) {
-        super(scope, id)
+  constructor(scope: Construct, id: string, props: HitCounterProps) {
+    super(scope, id);
 
-        const hitsTable = new Table(this, "Hits", {
-            partitionKey: { name: "path", type: AttributeType.STRING }
-        })
+    const hitsTable = new Table(this, "Hits", {
+      partitionKey: { name: "path", type: AttributeType.STRING },
+    });
 
-        this.handler = new NodejsFunction(this, "HitCounterHandler", {
-            entry: path.join(__dirname, '../lambda/hit-counter.ts'),
-            handler: 'handler',
-            runtime: Runtime.NODEJS_20_X,
-            bundling: { minify: true },
-            environment: {
-                HITS_TABLE_NAME: hitsTable.tableName,
-                TARGET_FUNCTION_NAME: props.targetFunction.functionName,
-            }
-        })
+    this.handler = new NodejsFunction(this, "HitCounterHandler", {
+      entry: path.join(__dirname, "../lambda/hit-counter.ts"),
+      handler: "handler",
+      runtime: Runtime.NODEJS_20_X,
+      bundling: { minify: true },
+      environment: {
+        HITS_TABLE_NAME: hitsTable.tableName,
+        TARGET_FUNCTION_NAME: props.targetFunction.functionName,
+      },
+    });
 
-        // Grant lambda permissions to write data to the table
-        hitsTable.grantReadWriteData(this.handler)
+    // Grant lambda permissions to write data to the table
+    hitsTable.grantReadWriteData(this.handler);
 
-        // Grant lambda permissions to invoke the target function
-        props.targetFunction.grantInvoke(this.handler)
-    }
+    // Grant lambda permissions to invoke the target function
+    props.targetFunction.grantInvoke(this.handler);
+  }
 }
