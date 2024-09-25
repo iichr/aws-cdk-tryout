@@ -1,7 +1,8 @@
-import { InvokeCommand, Lambda } from "@aws-sdk/client-lambda";
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
+import { InvokeCommand, Lambda } from "@aws-sdk/client-lambda";
+import { APIGatewayProxyEvent } from "aws-lambda";
 
-export const handler = async (event: { path: string }): Promise<object> => {
+export const handler = async (event: APIGatewayProxyEvent): Promise<object> => {
   const dynamoDb = new DynamoDB();
   const lambda = new Lambda();
 

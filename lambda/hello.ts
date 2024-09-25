@@ -1,4 +1,6 @@
-export const handler = async (event: any): Promise<object> => {
+import { APIGatewayProxyEvent } from "aws-lambda";
+
+export const handler = async (event: APIGatewayProxyEvent): Promise<object> => {
   console.log(`Event: ${JSON.stringify(event, null, 2)}`);
   return {
     statusCode: 200,
