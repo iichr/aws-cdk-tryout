@@ -5,6 +5,7 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 import * as path from "path";
 import { HitCounter } from "./hit-counter";
+import { TableViewer } from "cdk-dynamo-table-viewer";
 
 export class CdkWorkshopStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -23,6 +24,12 @@ export class CdkWorkshopStack extends Stack {
 
     new LambdaRestApi(this, "Endpoint", {
       handler: hitCounter.handler,
+    });
+
+    new TableViewer(this, "HitTableViewer", {
+      title: "Hits by page",
+      table: hitCounter.hitsTable,
+      sortBy: "-hits",
     });
   }
 }

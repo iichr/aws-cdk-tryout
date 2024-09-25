@@ -8,6 +8,14 @@ test("Lambdas and API GW created successfully", () => {
 
   const template = Template.fromStack(stack);
 
-  template.resourceCountIs("AWS::Lambda::Function", 2);
-  template.resourceCountIs("AWS::ApiGateway::RestApi", 1);
+  // Hit table viewer, hit counter and hello
+  template.resourceCountIs("AWS::Lambda::Function", 3);
+  // hit table viewer and hit counter
+  template.resourceCountIs("AWS::ApiGateway::RestApi", 2);
+
+  expect(
+    Object.keys(template.findResources("AWS::Lambda::Function")).find((key) =>
+      key.match(/^HitTableViewer/),
+    ),
+  ).toBeDefined();
 });

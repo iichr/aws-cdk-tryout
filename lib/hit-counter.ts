@@ -10,11 +10,12 @@ export interface HitCounterProps {
 
 export class HitCounter extends Construct {
   public readonly handler: NodejsFunction;
+  public readonly hitsTable: Table;
 
   constructor(scope: Construct, id: string, props: HitCounterProps) {
     super(scope, id);
 
-    const hitsTable = new Table(this, "Hits", {
+    this.hitsTable = new Table(this, "Hits", {
       partitionKey: { name: "path", type: AttributeType.STRING },
     });
 
@@ -24,13 +25,13 @@ export class HitCounter extends Construct {
       runtime: Runtime.NODEJS_20_X,
       bundling: { minify: true },
       environment: {
-        HITS_TABLE_NAME: hitsTable.tableName,
+        HITS_TABLE_NAME: this.hitsTable.tableName,
         TARGET_FUNCTION_NAME: props.targetFunction.functionName,
       },
     });
 
     // Grant lambda permissions to write data to the table
-    hitsTable.grantReadWriteData(this.handler);
+    this.hitsTable.grantReadWriteData(this.handler);
 
     // Grant lambda permissions to invoke the target function
     props.targetFunction.grantInvoke(this.handler);
