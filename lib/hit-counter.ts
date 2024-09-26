@@ -1,3 +1,4 @@
+import { RemovalPolicy } from "aws-cdk-lib";
 import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
 import { IFunction, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
@@ -17,6 +18,7 @@ export class HitCounter extends Construct {
 
     this.hitsTable = new Table(this, "Hits", {
       partitionKey: { name: "path", type: AttributeType.STRING },
+      removalPolicy: RemovalPolicy.DESTROY,
     });
 
     this.handler = new NodejsFunction(this, "HitCounterHandler", {

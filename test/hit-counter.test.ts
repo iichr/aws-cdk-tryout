@@ -19,6 +19,10 @@ test("DynamoDB table created successfully", () => {
   const template = Template.fromStack(stack);
 
   template.resourceCountIs("AWS::DynamoDB::Table", 1);
+  template.hasResource(
+    "AWS::DynamoDB::Table",
+    Match.objectLike({ DeletionPolicy: "Delete" }),
+  );
 });
 
 test("HitCounter lambda created", () => {
